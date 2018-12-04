@@ -1,5 +1,5 @@
 # Comunincação cliente-servidor com entraga ordenada em udp 
- \n\n\n\n
+\newline
  
  
 # Funcionamento
