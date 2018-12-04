@@ -4,7 +4,7 @@
  
 # Funcionamento
 
-Para que a entrega ordenada aconteça primeiro pegamos a mensagem a ser enviada e separamos em pacotes menos com 24bits cada, para assim ser enviado ao servidor, que ao receber retorna uma mensagem de confirmação para que seja enviado o proximo pacote, assim continuamente até q o cliente sinalize que todos os pacotes já foram enviados, mantendo assim sua ordenção.
+Para que a entrega ordenada aconteça primeiro pegamos a mensagem a ser enviada e separamos em pacotes menores com 24bits cada, para assim ser enviado ao servidor, que ao receber retorna uma mensagem de confirmação para que seja enviado o próximo pacote, assim continuamente até que o cliente sinalize que todos os pacotes já foram enviados, mantendo assim sua ordenção.
 
 
 
@@ -19,8 +19,8 @@ Para que a entrega ordenada aconteça primeiro pegamos a mensagem a ser enviada 
  <br />
 
 * Abra o terminal
-* navegue até a pasta do projeto
-* execute o comando ./server
+* Navegue até a pasta do projeto
+* Execute o comando ./server
   
 <br />
  
@@ -29,8 +29,8 @@ Para que a entrega ordenada aconteça primeiro pegamos a mensagem a ser enviada 
 <br /> 
  
 * Abra o terminal(Obs: Diferente do anterior)
-* navegue até a pasta do projeto
-* execute o comando ./client
+* Navegue até a pasta do projeto
+* Execute o comando ./client
 * Insira a mensagem a ser enviada
 * 
  <br />
@@ -40,7 +40,7 @@ Para que a entrega ordenada aconteça primeiro pegamos a mensagem a ser enviada 
 ## Server
  <br />
 
-No terminal do servidor será mostrado em ordem de chegada os dados de cada pacote, bem como a mensagem de que a mensagem de confirmação foi enviada.
+No terminal do servidor será mostrado em ordem de chegada os dados de cada pacote, bem como a notificação de que a mensagem de confirmação foi enviada.
  
  <br />
 
