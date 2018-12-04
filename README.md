@@ -1,17 +1,19 @@
 # Comunincação cliente-servidor com entraga ordenada em udp 
 <br />
-<br />
  
  
 # Funcionamento
+
+    Para que a entrega ordenada acontece primerio pegamos a mensagem a ser enviada e separamos em pacotes menos com 24bits cada, para assim ser enviado ao servidor, que ao receber retorna uma mensagem de confirmação para que seja enviado o proximo pacote mantendo assim sua ordenção.
+
+
+
  <br />
  <br />
  
  
  
 # Utilização
- 
- 
  
 ## iniciar server
  <br />
