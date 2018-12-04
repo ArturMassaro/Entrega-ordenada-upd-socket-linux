@@ -39,7 +39,6 @@ Exemplo client enviando "ola tudo bem ?" como mensagem.
 * Navegue até a pasta do projeto
 * Execute o comando ./client
 * Insira a mensagem a ser enviada
-
  <br />
  
 # Resultado final
