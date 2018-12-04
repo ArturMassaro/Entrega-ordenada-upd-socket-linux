@@ -17,9 +17,11 @@ Para que a entrega ordenada aconteça primeiro pegamos a mensagem a ser enviada 
  
 ## iniciar server
  <br />
+
 * Abra o terminal
 * navegue até a pasta do projeto
 * execute o comando ./server
+  
 <br />
  
  
@@ -30,6 +32,7 @@ Para que a entrega ordenada aconteça primeiro pegamos a mensagem a ser enviada 
 * navegue até a pasta do projeto
 * execute o comando ./client
 * Insira a mensagem a ser enviada
+* 
  <br />
  
 # Resultado final
@@ -44,7 +47,9 @@ No terminal do servidor será mostrado em ordem de chegada os dados de cada paco
 ## Client
 
 <br />
+
 No terminal do client será mostrado em ordem de envio o numero e os dados de cada pacote, bem como a mensagem de confirmação recebida do servidor.
+
  <br />
  
   
