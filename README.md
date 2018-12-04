@@ -7,8 +7,12 @@
 Para que a entrega ordenada aconteça primeiro pegamos a mensagem a ser enviada e separamos em pacotes menores com 24bits cada, para assim ser enviado ao servidor, que ao receber retorna uma mensagem de confirmação para que seja enviado o próximo pacote, assim continuamente até que o cliente sinalize que todos os pacotes já foram enviados, mantendo assim sua ordenção.
 <br />
 
-![](https://github.com/ArturMassaro/Entrega-ordenada-upd-socket-linux/blob/master/Diagramas/diagram1.jpg)
+![](Diagramas/diagram1.jpg)
 
+Exemplo client enviando "ola tudo bem ?" como mensagem.
+
+
+![](Diagramas/exemplo.jpg)
 
 
  <br />
