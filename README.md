@@ -32,7 +32,7 @@ Para que a entrega ordenada aconteça primeiro pegamos a mensagem a ser enviada 
 * Navegue até a pasta do projeto
 * Execute o comando ./client
 * Insira a mensagem a ser enviada
-* 
+
  <br />
  
 # Resultado final
