@@ -5,11 +5,20 @@
 #include <string.h> 
 #include <sys/types.h> 
 #include <sys/socket.h> 
+#include <sys/time.h>
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 
 #define PORT	 8080 
 #define MAXLINE 1024 
+
+
+
+
+
+
+
+
 
 // Driver code 
 int main() { 
@@ -29,8 +38,15 @@ int main() {
 	// Filling server information 
 	servaddr.sin_family = AF_INET; 
 	servaddr.sin_port = htons(PORT); 
-	servaddr.sin_addr.s_addr = INADDR_ANY; 
-	
+	//servaddr.sin_addr.s_addr = inet_addr("192.168.100.121");
+    servaddr.sin_addr.s_addr = INADDR_ANY; 
+    
+	struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 100000;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
+        perror("Error");
+    }
 
 
     printf("\n\ninforme a mensagem: ");
@@ -44,8 +60,9 @@ int main() {
     strcpy(msg,"");
 
 
-    int pacotes = 0;
+    int pacotes = 0, ultPacote = -1;
 
+    int erros = 0;
     for(i = 0; i < len2; i++){
         if(i == len2 - 1){
             aux[0] = str[i];
@@ -54,9 +71,86 @@ int main() {
 
             //Envia dados
 
+
             int n, len; 
+                char msgEnvia[5], aux[5];
+
+                if(ultPacote == pacotes){
+                    aux[0] = 'r';
+                    aux[1] = '\0';
+                }else{
+                    aux[0] = 'c';
+                    aux[1] = '\0';
+                }
+
+                strcpy(msgEnvia, aux);
+                strcat(msgEnvia, msg);
+
+
+                sendto(sockfd, (const char *)msgEnvia, strlen(msgEnvia), 
+                    MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
+                        sizeof(servaddr)); 
+                
+                ultPacote = pacotes;
+
+                printf("\n____________________________________\n"); 
+                printf("\nPacote %d.\n", pacotes); 
+                    
+                n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
+                            0, (struct sockaddr *) &servaddr, 
+                            &len); 
+
+
+
+
+                if(n == -1){
+                    printf("Confirmação nao recebida");
+                    msg[strlen(msg)-1] = '\0';
+                    
+                    erros++;
+                    i = i -2;
+
+                    if(erros == 10){
+                        break;
+                    }
+
+                }else{
+                    //buffer[n] = '\0'; 
+
+                    if(buffer[0] == 'c'){
+                        printf("Server : %s\n", buffer); 
+
+
+                        
+                        printf("Dado: %s \n", msg);
+                        strcpy(msg, "");
+                        i--;
+                        pacotes++;
+                        break;
+                    }else{
+                        printf("ERRO");
+                    }
+                }
+
+
+
+
+
+
+
+
             
-            sendto(sockfd, (const char *)msg, strlen(msg), 
+
+            /*int n, len; 
+            char msgEnvia[5], aux[5];
+
+            aux[0] = pacotes;
+            aux[1] = '\0';
+
+            strcpy(msgEnvia, aux);
+            strcat(msgEnvia, msg);
+            
+            sendto(sockfd, (const char *)msgEnvia, strlen(msgEnvia), 
                 MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
                     sizeof(servaddr)); 
             printf("\n____________________________________\n"); 
@@ -64,45 +158,86 @@ int main() {
             printf("\nPacote final enviado | total = %d.\n", pacotes); 
                 
             n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
-                        MSG_WAITALL, (struct sockaddr *) &servaddr, 
+                        MSG_DONTWAIT, (struct sockaddr *) &servaddr, 
                         &len); 
             buffer[n] = '\0'; 
             printf("Server : %s\n", buffer); 
 
             printf("Dado: %s \n", msg);
-            strcpy(msg, "");
-        }else{
-            if(strlen(msg) == 3){
+            strcpy(msg, "");*/
+        }else if(strlen(msg) == 3){
 
                 //Envia dados
 
                 int n, len; 
-            
-                sendto(sockfd, (const char *)msg, strlen(msg), 
+                char msgEnvia[5], aux[5];
+
+                if(ultPacote == pacotes){
+                    aux[0] = 'r';
+                    aux[1] = '\0';
+                }else{
+                    aux[0] = 'c';
+                    aux[1] = '\0';
+                }
+
+                strcpy(msgEnvia, aux);
+                strcat(msgEnvia, msg);
+
+
+                sendto(sockfd, (const char *)msgEnvia, strlen(msgEnvia), 
                     MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
                         sizeof(servaddr)); 
+                
+                ultPacote = pacotes;
+
                 printf("\n____________________________________\n"); 
                 printf("\nPacote %d.\n", pacotes); 
                     
                 n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
-                            MSG_WAITALL, (struct sockaddr *) &servaddr, 
+                            0, (struct sockaddr *) &servaddr, 
                             &len); 
-                buffer[n] = '\0'; 
-                printf("Server : %s\n", buffer); 
 
+
+
+
+                if(n == -1){
+                    printf("Confirmação nao recebida");
+                    msg[strlen(msg)-1] = '\0';
+                    
+                    erros++;
+                    i = i -2;
+
+                    if(erros == 10){
+                        break;
+                    }
+
+                }else{
+                    //buffer[n] = '\0'; 
+
+                    if(buffer[0] == 'c'){
+                        printf("Server : %s\n", buffer); 
+
+
+                        
+                        printf("Dado: %s \n", msg);
+                        strcpy(msg, "");
+                        i--;
+                        pacotes++;
+                        
+                    }else{
+                        printf("ERRO");
+                    }
+                }
 
                 
-                printf("Dado: %s \n", msg);
-                strcpy(msg, "");
-                i--;
-                pacotes++;
+                
 
             }else{
                 aux[0] = str[i];
                 aux[1] = '\0';
                 strcat(msg, aux);            
             }
-        }
+        
 
     }
 
@@ -128,7 +263,7 @@ int main() {
 				MSG_WAITALL, (struct sockaddr *) &servaddr, 
 				&len); 
 	buffer[n] = '\0'; */
-	printf("Conexao encerrada\n"); 
+	printf("Conexao encerrada \n"); 
     printf("\n************************************\n"); 
 
 

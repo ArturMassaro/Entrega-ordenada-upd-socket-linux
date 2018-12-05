@@ -16,7 +16,7 @@ int main() {
 	int sockfd; 
 	char buffer[MAXLINE]; 
     char msg[100];
-	char *conf = "c"; 
+	char conf[5]; 
 	struct sockaddr_in servaddr, cliaddr; 
 	
 	// Creating socket file descriptor 
@@ -41,16 +41,34 @@ int main() {
 		exit(EXIT_FAILURE); 
 	} 
 	
+
+
     while(1){
+        
+        strcpy(msg, "");
+        
 
         while(1){
             int len, n; 
+            char pac[5];
+            char verf;
+
             n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
-                        MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
+                        MSG_WAITFORONE, ( struct sockaddr *) &cliaddr, 
                         &len); 
             buffer[n] = '\0'; 
+
+            verf = buffer[0];
             
-            if(strcmp(buffer, "f") == 0){
+            int cont = 0;
+
+            for(cont = 1; cont <= strlen(buffer); cont++){
+                pac[cont-1] = buffer[cont];
+            }
+
+            printf("verificacao = %c", verf);
+            
+            if(verf == 'f'){
                 printf("Conexao encerrada.\n"); 
                 printf("\n\n Mensagem = %s.\n", msg); 
 
@@ -58,15 +76,17 @@ int main() {
                 
                 break;
                 
-            }else if(strcmp(buffer, "enc") == 0){
+            }else if(verf == 'q'){
                 printf("\n\nEncerrando\n\n");
                 return 0;
-            }else{
+            }else if (verf == 'c'){
                 
 
 
-                printf("\n\nClient : %s\n", buffer); 
-                strcat(msg,buffer);
+                printf("\n\nClient : %s\n", pac); 
+                strcat(msg,pac);
+
+                strcpy(conf, "c");
 
                 int x = strlen(conf);
                 sendto(sockfd, (const char *)conf, x, 
@@ -74,6 +94,23 @@ int main() {
                         len); 
                 printf("Confirmação enviada.\n"); 
                 printf("\n____________________________________\n"); 
+
+            }else if(verf == 'r'){
+                
+                msg[strlen(msg) - strlen(pac)] = '\0';
+
+                printf("\n\nClient : %s\n", pac); 
+                strcat(msg,pac);
+
+                strcpy(conf, "c");
+
+                int x = strlen(conf);
+                sendto(sockfd, (const char *)conf, x, 
+                    MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
+                        len); 
+                printf("Confirmação enviada | Mensagem re-renviada.\n"); 
+                printf("\n____________________________________\n"); 
+
 
             }
 
