@@ -1,4 +1,4 @@
-// Client side implementation of UDP client-server model 
+// Implementação do lado do cliente do modelo cliente-servidor UDP
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <unistd.h> 
@@ -15,11 +15,6 @@
 
 
 
-
-
-
-
-
 // Driver code 
 int main() { 
 	int sockfd; 
@@ -27,7 +22,7 @@ int main() {
 	char str[MAXLINE] = "Olá tudo bem com voce ?"; 
 	struct sockaddr_in	 servaddr; 
 
-	// Creating socket file descriptor 
+	// Criando o descritor de arquivo de soquete 
 	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
 		perror("socket creation failed"); 
 		exit(EXIT_FAILURE); 
@@ -35,7 +30,7 @@ int main() {
 
 	memset(&servaddr, 0, sizeof(servaddr)); 
 	
-	// Filling server information 
+	// Preenchendo informações do servidor
 	servaddr.sin_family = AF_INET; 
 	servaddr.sin_port = htons(PORT); 
 	//servaddr.sin_addr.s_addr = inet_addr("192.168.100.121");
@@ -63,17 +58,24 @@ int main() {
     int pacotes = 0, ultPacote = -1;
 
     int erros = 0;
+
+    // Percorre toda a mensagem
     for(i = 0; i < len2; i++){
+
+
+        // Verifica se é o final da mensagem
         if(i == len2 - 1){
             aux[0] = str[i];
             aux[1] = '\0';
             strcat(msg, aux);
 
-            //Envia dados
+            
 
 
-            int n, len; 
+                int n, len; 
                 char msgEnvia[5], aux[5];
+                
+                // insere o caracter de verificação
 
                 if(ultPacote == pacotes){
                     aux[0] = 'r';
@@ -86,6 +88,7 @@ int main() {
                 strcpy(msgEnvia, aux);
                 strcat(msgEnvia, msg);
 
+                //Envia os dados dados
 
                 sendto(sockfd, (const char *)msgEnvia, strlen(msgEnvia), 
                     MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
@@ -96,13 +99,14 @@ int main() {
                 printf("\n____________________________________\n"); 
                 printf("\nPacote %d.\n", pacotes); 
                     
+                //Recebe a confirmação do servidor
                 n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
                             0, (struct sockaddr *) &servaddr, 
                             &len); 
 
 
 
-
+                //  caso timeout
                 if(n == -1){
                     printf("Confirmação nao recebida");
                     msg[strlen(msg)-1] = '\0';
@@ -132,42 +136,10 @@ int main() {
                     }
                 }
 
-
-
-
-
-
-
-
-            
-
-            /*int n, len; 
-            char msgEnvia[5], aux[5];
-
-            aux[0] = pacotes;
-            aux[1] = '\0';
-
-            strcpy(msgEnvia, aux);
-            strcat(msgEnvia, msg);
-            
-            sendto(sockfd, (const char *)msgEnvia, strlen(msgEnvia), 
-                MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
-                    sizeof(servaddr)); 
-            printf("\n____________________________________\n"); 
-
-            printf("\nPacote final enviado | total = %d.\n", pacotes); 
-                
-            n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
-                        MSG_DONTWAIT, (struct sockaddr *) &servaddr, 
-                        &len); 
-            buffer[n] = '\0'; 
-            printf("Server : %s\n", buffer); 
-
-            printf("Dado: %s \n", msg);
-            strcpy(msg, "");*/
+        // quando completar um pacote de 3 caracteres
         }else if(strlen(msg) == 3){
 
-                //Envia dados
+                
 
                 int n, len; 
                 char msgEnvia[5], aux[5];
@@ -183,7 +155,7 @@ int main() {
                 strcpy(msgEnvia, aux);
                 strcat(msgEnvia, msg);
 
-
+                //Envia dados
                 sendto(sockfd, (const char *)msgEnvia, strlen(msgEnvia), 
                     MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
                         sizeof(servaddr)); 
@@ -192,7 +164,9 @@ int main() {
 
                 printf("\n____________________________________\n"); 
                 printf("\nPacote %d.\n", pacotes); 
-                    
+
+
+                //recebe confirmação    
                 n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
                             0, (struct sockaddr *) &servaddr, 
                             &len); 
@@ -200,6 +174,7 @@ int main() {
 
 
 
+                // Caso timeout
                 if(n == -1){
                     printf("Confirmação nao recebida");
                     msg[strlen(msg)-1] = '\0';
@@ -231,7 +206,7 @@ int main() {
 
                 
                 
-
+            // agrupa o Pacote
             }else{
                 aux[0] = str[i];
                 aux[1] = '\0';
